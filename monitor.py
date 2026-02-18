@@ -1,10 +1,12 @@
 import time
+from urllib import response
 from app import app  # Imports your compiled LangGraph app
 from langchain_core.messages import HumanMessage
 
 def run_benchmark(query: str, thread_id: str = "benchmark_1"):
     # ... (rest of your setup) ...
-    response = app.invoke({"messages": [HumanMessage(content=query)]}, config)
+    start_time = time.time()
+    response = app.invoke({"messages": [HumanMessage(content=query)]}, method="POST", config={"configurable": {"thread_id": thread_id}})
     end_time = time.time()
     
     latency = end_time - start_time
