@@ -2,6 +2,7 @@ import os
 from langchain_openai import AzureChatOpenAI
 from langchain_core.messages import AIMessage
 from agent.state import AgentState
+import re
 
 # Initialize the LLM once
 llm = AzureChatOpenAI(
@@ -16,13 +17,29 @@ def chatbot_node(state: AgentState):
     return {"messages": [response]}
 
 def calculator_node(state: AgentState):
-    """Handles math-related queries locally to save costs."""
-    # In a real app, you'd parse the numbers here.
-    result = "Calculator Node: I detected a math query and processed the result locally."
+    """Actually calculates values from the user input."""
+    user_msg = state["messages"][-1].content
+    
+    # Simple regex to find numbers and an operator
+    match = re.search(r'(\d+)\s*([\+\-\*\/])\s*(\d+)', user_msg)
+    
+    if match:
+        num1, op, num2 = match.groups()
+        num1, num2 = int(num1), int(num2)
+        
+        if op == '+': result = num1 + num2
+        elif op == '-': result = num1 - num2
+        elif op == '*': result = num1 * num2
+        elif op == '/': result = num1 / num2 if num2 != 0 else "Error: Div by zero"
+        
+        content = f"Calculator Node: The result of {num1} {op} {num2} is {result}."
+    else:
+        content = "Calculator Node: I couldn't parse the math expression, but the route worked!"
+
     return {
         "messages": [
             AIMessage(
-                content=result,
+                content=content,
                 usage_metadata={"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
             )
         ]
