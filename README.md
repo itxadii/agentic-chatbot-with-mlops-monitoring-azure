@@ -24,5 +24,5 @@ A production-ready AI Agent built with **LangGraph** and **Azure GPT-4.1-mini**,
 ## ⚙️ Setup Instructions
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-link>
-   cd <repo-folder>
+   git clone https://github.com/itxadii/agentic-chatbot-with-mlops-monitoring-azure.git
+   cd agentic-chatbot-with-mlops-monitoring-azure
